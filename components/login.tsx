@@ -42,8 +42,8 @@ export default function Login(){
   }, [email, password]);
 
     return (
-        <div className={` ${inter.className} h-[calc(100vh-20px)]  flex flex-col  items-center mx-auto justify-between bg-gradient-to-r from-[#1D1D1F] to-transparent text-white border border-black shadow-[0_1px_10px_rgba(255,255,255,0.15),inset_0px_0.7px_0px_rgba(255,255,255,0.10)]  px-6 py-7 rounded-2xl`}>
-          <div className={`txtShadow    font-Garamond text-[48px] max-w-[470px]  text-slate-100  ${garamond.className}`}>Connections That Matter</div>
+        <div className={` ${inter.className} h-[calc(100vh-20px)]  flex flex-col  items-center mx-auto justify-between bg-gradient-to-r from-[#1D1D1F] to-transparent text-white   py-7 rounded-2xl`}>
+          <div className=""></div>
                    
           <div className="flex flex-col ">
                     <div className={`mb-8 ${garamond.className} text-3xl `}>Add Your Brilliance</div>

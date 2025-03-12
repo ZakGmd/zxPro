@@ -1,7 +1,17 @@
-import NextAuth from "next-auth";
+import NextAuth, { User } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import  prisma from "./libs/prisma";
 import authConfig from  "./auth.config";
+
+declare module "next-auth" {
+  interface User {
+    accessToken?: string;
+  }
+
+  interface Session {
+    user: User;
+  }
+}
 
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
