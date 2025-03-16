@@ -19,7 +19,7 @@ model User {
   username      String    @unique
   email         String    @unique
   emailVerified DateTime?
-  password      String
+  password      String?
   bio           String?   @db.Text
   image         String?
   coverImage    String?
@@ -27,6 +27,15 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+   posts         Post[]
+  comments      Comment[]
+  likes         Like[]
+  followedBy    Follow[]  @relation("Follower")
+  following     Follow[]  @relation("Following")
+  notifications Notification[] @relation("NotificationTo")
+  sentNotifications Notification[] @relation("NotificationFrom")
+  messages      Message[] @relation("MessageFrom")
+  receivedMessages Message[] @relation("MessageTo")
 }
 model Session {
   sessionToken String   @unique
@@ -64,4 +73,83 @@ model VerificationToken {
  
   @@id([identifier, token])
 }
- 
+model Post {
+  id        String   @id @default(cuid())
+  text      String   @db.Text
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  comments  Comment[]
+  likes     Like[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  text      String   @db.Text
+  createdAt DateTime @default(now())
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+}
+
+model Follow {
+  id            String   @id @default(cuid())
+  followerId    String
+  follower      User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  
+  followingId   String
+  following     User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+  
+  createdAt     DateTime @default(now())
+
+  @@unique([followerId, followingId])
+}
+
+model Notification {
+  id            String   @id @default(cuid())
+  type          String   // LIKE, FOLLOW, COMMENT, MENTION
+  body          String?
+  isRead        Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  
+  toUserId      String
+  toUser        User     @relation("NotificationTo", fields: [toUserId], references: [id], onDelete: Cascade)
+  
+  fromUserId    String?
+  fromUser      User?    @relation("NotificationFrom", fields: [fromUserId], references: [id], onDelete: SetNull)
+  
+  postId        String?
+}
+
+model Message {
+  id            String   @id @default(cuid())
+  content       String   @db.Text
+  createdAt     DateTime @default(now())
+  isRead        Boolean  @default(false)
+  
+  fromUserId    String
+  fromUser      User     @relation("MessageFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
+  
+  toUserId      String
+  toUser        User     @relation("MessageTo", fields: [toUserId], references: [id], onDelete: Cascade)
+}

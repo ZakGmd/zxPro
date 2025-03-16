@@ -1,29 +1,33 @@
+import { NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+import { NextRequest } from 'next/server';
 
-import NextAuth from "next-auth";
-import authConfig from "./auth.config"
-
- 
- const { auth }  = NextAuth(authConfig)
-
-
-export default auth((req) => {
-
-  const isLoggedIn = !!req.auth;
-
+export async function middleware(req: NextRequest) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const isAuthenticated = !!token;
   
-  if (isLoggedIn && !req.nextUrl.pathname.startsWith('/dashboard')) {
-    return Response.redirect(new URL('/dashboard', req.url))
+  const { pathname } = req.nextUrl;
+  
+  // Paths that don't require authentication
+  const publicPaths = ['/', '/sign-in', '/sign-up'];
+  
+  // Check if the path requires authentication
+  const isPublicPath = publicPaths.includes(pathname);
+  
+  // If user is not authenticated and the path is not public, redirect to sign-in
+  if (!isAuthenticated && !isPublicPath) {
+    return NextResponse.redirect(new URL('/sign-in', req.url));
   }
- 
-  if (!isLoggedIn && req.nextUrl.pathname.startsWith('/dashboard')) {
-    return Response.redirect(new URL('/', req.url))
+  
+  // If user is authenticated and trying to access auth pages, redirect to home
+  if (isAuthenticated && isPublicPath) {
+    return NextResponse.redirect(new URL('/home', req.url));
   }
+  
+  return NextResponse.next();
+}
 
-  console.log("ROUTE :",req.nextUrl.pathname);
-  console.log("Is Loggedin" , isLoggedIn) ;
-
-});
-
+// Only run middleware on these paths
 export const config = {
-    matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: ['/', '/sign-in', '/sign-up', '/home/:path*']
 };

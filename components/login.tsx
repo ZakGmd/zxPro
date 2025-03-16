@@ -45,7 +45,7 @@ export default function Login(){
         <div className={` ${inter.className} h-[calc(100vh-20px)]  flex flex-col  items-center mx-auto justify-between bg-gradient-to-r from-[#1D1D1F] to-transparent text-white   py-7 rounded-2xl`}>
           <div className=""></div>
                    
-          <div className="flex flex-col ">
+          <div className="flex flex-col mt-4 ">
                     <div className={`mb-8 ${garamond.className} text-3xl `}>Add Your Brilliance</div>
                     <div className="flex flex-col items-start gap-2">
                       <GoogleLoginButton/>
@@ -60,10 +60,10 @@ export default function Login(){
                     <div className='px-3 h-11 w-[448px] mb-2 text-[18px]   border text-white  text-center flex items-center justify-center rounded-3xl  border-black bg-[#fc7348]/60 font-light cursor-pointer hover:bg-[#fc7348] hover:bg-gradient-to-b hover:from-transparent transition-all duration-300   hover:shadow-[0px_0.4px_0px_rgba(0,0,0,0.4),inset_0px_2px_0px_rgba(0,0,0,0.10)] active:shadow-[0px_0.1px_0px_rgba(252,115,72,0.01),inset_0px_5px_0px_rgba(0,0,0,0.10)]  shadow-[0_1.1px_2px_rgba(0,0,0,0.65),inset_0px_0.7px_0px_rgba(255,255,255,0.15)]'>Create an account</div>
                     <div className="text-start text-[12px] font-light max-w-[384px] text-slate-100/50 mb-8">By signing up, you agree to the <span className="text-[#fc7348]"> Terms of Service </span>and <span className="text-[#fc7348]">Privacy Policy</span>, including <span className="text-[#fc7348]">Cookie Use.</span> </div>
                     <div className="mb-4 ">Already have an account?</div>
-                    <div className='px-3 h-11 w-[448px] mb-2 text-[16px] bg-gradient-to-b from-transparent from-[34%] to-[#fc7348]/10   text-white  text-center flex items-center justify-center rounded-3xl
+                    <div className='px-3 py-5 h-11 w-[448px]  mb-2 text-[16px] bg-gradient-to-b from-transparent from-[34%] to-[#fc7348]/10 gap-1   text-white  text-center flex items-center justify-center rounded-3xl
                                    font-light cursor-pointer  duration-300 border border-black  hover:shadow-[0px_0.4px_0px_rgba(0,0,0,0.4),inset_0px_2px_0px_rgba(0,0,0,0.10)] 
                                      transition-shadow  
-                                    shadow-[0_1.1px_2px_rgba(0,0,0,0.65),inset_0px_1px_1px_rgba(255,255,255,0.20)]'>Sign in</div>
+                                    shadow-[0_1.1px_2px_rgba(0,0,0,0.65),inset_0px_1px_1px_rgba(255,255,255,0.20)]'>Sign in <Image src={"loginIcon.svg"} alt={""} width={20} height={20} />  </div>
           </div>
 
           <div>

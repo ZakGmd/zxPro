@@ -1,45 +1,31 @@
-import NextAuth, { User } from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import  prisma from "./libs/prisma";
-import authConfig from  "./auth.config";
-
-declare module "next-auth" {
-  interface User {
-    accessToken?: string;
-  }
-
-  interface Session {
-    user: User;
-  }
-}
-
+import NextAuth from "next-auth";
+import authConfig from "./auth.config";
+import { customPrismaAdapter } from "./libs/auth-adapter";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  
-  callbacks: {  
-    async session({ token, session}) {
-      session.user.accessToken = token.accessToken 
-      session.user.id = token.sub ;
-     
+  callbacks: {
+    async session({ token, session }) {
+      if (token && session.user) {
+        // @ts-ignore - Adding custom properties to the session
+        session.user.id = token.sub;
+        // @ts-ignore - Adding custom properties to the session
+        session.user.accessToken = token.accessToken;
+      }
       return session;
     },
-    async jwt({ token, user , account}) {
-      if (account?.provider === "Prisma") {
-        return { ...token, accessToken: account.access_token }
+    async jwt({ token, user, account }) {
+      if (user) {
+        token.sub = user.id;
       }
-      if (user && account) { 
-        token.id = user.id
-        token.accessToken = account.access_token
-        token.id = account.id
-      }
-    
       
-      return token
+      if (account?.access_token) {
+        token.accessToken = account.access_token;
+      }
+      
+      return token;
     },
-    
-    
   },
-  adapter: PrismaAdapter(prisma),
+  adapter: customPrismaAdapter,
   session: { strategy: "jwt" },
   secret: process.env.NEXTAUTH_SECRET,
   ...authConfig,
